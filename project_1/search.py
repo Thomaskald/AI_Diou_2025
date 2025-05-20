@@ -110,6 +110,8 @@ def depthFirstSearch(problem):
             if nextState not in visited:
                 stack.push((nextState, path + [action]))
 
+    return []
+
     #util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
@@ -135,6 +137,8 @@ def breadthFirstSearch(problem):
         for nextState, action, _ in problem.getNextStates(current):
             if nextState not in visited:
                 queue.push((nextState, path + [action]))
+
+    return []
 
 
     #util.raiseNotDefined()
@@ -164,6 +168,8 @@ def uniformCostSearch(problem):
             totalCost = cost + stepCost
             if (location not in visited) or (totalCost < visited.get(nextState, float('inf'))):
                 priorityQueue.push((nextState, path + [action], totalCost), totalCost)
+
+    return []
 
 
     #util.raiseNotDefined()
@@ -203,6 +209,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             priority = newCost + heuristic(nextState, problem)
             if nextState not in visited or newCost < visited.get(nextState, float('inf')):
                 frontier.push((nextState, path + [action], newCost), priority)
+
+    return []
 
     #util.raiseNotDefined()
 
