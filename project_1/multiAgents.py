@@ -223,6 +223,63 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         legal moves.
         """
         "*** YOUR CODE HERE ***"
+
+        bestScore, bestAction = self.expectimax(gameState, 0, 0)
+        return bestAction
+
+    def expectimax(self, gameState, agentIndex, depth):
+        if depth == self.depth or gameState.isWin() or gameState.isLose():
+            return self.evaluationFunction(gameState), None
+
+        if agentIndex == 0:
+            return self.maxValue(gameState, depth, agentIndex)
+        else:
+            return self.expValue(gameState, depth, agentIndex)
+
+    def maxValue(self, gameState, depth, agentIndex):
+        v = float("-inf")
+        bestAction = None
+        allActions = gameState.getAvailableActions(agentIndex)
+        for action in allActions:
+            successor = gameState.generateNextState(agentIndex, action)
+            successorIndex = agentIndex + 1
+            successorDepth = depth
+
+            if successorIndex == gameState.getNumAgents():
+                successorIndex = 0
+                successorDepth += 1
+
+            successorValue = self.expectimax(successor, successorIndex, successorDepth)[0]
+
+            if successorValue > v:
+                v = successorValue
+                bestAction = action
+
+        return v, bestAction
+
+    def expValue(self, gameState, depth, agentIndex):
+        v = 0
+        bestAction = None
+        allActions = gameState.getAvailableActions(agentIndex)
+
+        if len(allActions) == 0:
+            return self.evaluationFunction(gameState), None
+
+        for action in allActions:
+            successor = gameState.generateNextState(agentIndex, action)
+            successorIndex = agentIndex + 1
+            successorDepth = depth
+
+            if successorIndex == gameState.getNumAgents():
+                successorIndex = 0
+                successorDepth += 1
+
+            successorValue = self.expectimax(successor, successorIndex, successorDepth)[0]
+
+            v += successorValue
+
+        return v, bestAction
+
         #util.raiseNotDefined()
 
 def betterEvaluationFunction(currentGameState):
