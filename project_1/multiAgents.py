@@ -90,16 +90,16 @@ class MinimaxAgent(MultiAgentSearchAgent):
         else:
             return self.minValue(gameState, depth, agentIndex)
 
-    def maxValue(self, state, currentDepth, agentIndex):
+    def maxValue(self, gameState, currentDepth, agentIndex):
         v = float("-inf")
         bestAction = None
-        allActions = state.getAvailableActions(agentIndex)
+        allActions = gameState.getAvailableActions(agentIndex)
         for action in allActions:
-            successor = state.generateNextState(agentIndex, action)
+            successor = gameState.generateNextState(agentIndex, action)
             successorIndex = agentIndex + 1
             successorDepth = currentDepth
 
-            if successorIndex == state.getNumAgents():
+            if successorIndex == gameState.getNumAgents():
                 successorIndex = 0
                 successorDepth += 1
 
@@ -111,16 +111,16 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
         return v, bestAction
 
-    def minValue(self, state, currentDepth, agentIndex):
+    def minValue(self, gameState, currentDepth, agentIndex):
         v = float("inf")
         bestAction = None
-        allActions = state.getAvailableActions(agentIndex)
+        allActions = gameState.getAvailableActions(agentIndex)
         for action in allActions:
-            successor = state.generateNextState(agentIndex, action)
+            successor = gameState.generateNextState(agentIndex, action)
             successorIndex = agentIndex + 1
             successorDepth = currentDepth
 
-            if successorIndex == state.getNumAgents():
+            if successorIndex == gameState.getNumAgents():
                 successorIndex = 0
                 successorDepth += 1
 
@@ -144,36 +144,35 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-
-        score, bestAction = self.alphabeta(gameState, agentIndex = 0, depth = 0, alpha = float('-inf'), beta = float('inf'))
+        bestScore, bestAction = self.alphaBeta(gameState, 0, 0, float('-inf'), float('inf'))
         return bestAction
 
-    def alphabeta(self, state, agentIndex, depth, alpha, beta):
-        if depth == self.depth or state.isWin() or state.isLose():
-            return self.evaluationFunction(state), None
+    def alphaBeta(self, gameState, agentIndex, depth, alpha, beta):
+        if depth == self.depth or gameState.isWin() or gameState.isLose():
+            return self.evaluationFunction(gameState), None
 
         if agentIndex == 0:
-            return self.maxValue(state, agentIndex, depth, alpha, beta)
+            return self.maxValue(gameState, depth, agentIndex, alpha, beta)
         else:
-            return self.minValue(state, agentIndex, depth, alpha, beta)
+            return self.minValue(gameState, depth, agentIndex, alpha, beta)
 
-    def maxValue(self, state, agentIndex, depth, alpha, beta):
-        v = float('-inf')
+    def maxValue(self, gameState, depth, agentIndex, alpha, beta):
+        v = float("-inf")
         bestAction = None
+        allActions = gameState.getAvailableActions(agentIndex)
+        for action in allActions:
+            successor = gameState.generateNextState(agentIndex, action)
+            successorIndex = agentIndex + 1
+            successorDepth = depth
 
-        for action in state.getAvailableActions(agentIndex):
-            successor = state.generateNextState(agentIndex, action)
-            nextAgent = agentIndex + 1
-            nextDepth = depth
+            if successorIndex == gameState.getNumAgents():
+                successorIndex = 0
+                successorDepth += 1
 
-            if nextAgent == state.getNumAgents():
-                nextAgent = 0
-                nextDepth += 1
+            successorValue = self.alphaBeta(successor, successorIndex, successorDepth, alpha, beta)[0]
 
-            value, _ = self.alphabeta(successor, nextAgent, nextDepth, alpha, beta)
-
-            if value > v:
-                v = value
+            if successorValue > v:
+                v = successorValue
                 bestAction = action
 
             if v > beta:
@@ -183,30 +182,29 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
         return v, bestAction
 
-
-    def minValue(self, state, agentIndex, depth, alpha, beta):
-        v = float('inf')
+    def minValue(self, gameState, depth, agentIndex, alpha, beta):
+        v = float("inf")
         bestAction = None
+        allActions = gameState.getAvailableActions(agentIndex)
+        for action in allActions:
+            successor = gameState.generateNextState(agentIndex, action)
+            successorIndex = agentIndex + 1
+            successorDepth = depth
 
-        for action in state.getAvailableActions(agentIndex):
-            successor = state.generateNextState(agentIndex, action)
-            nextAgent = agentIndex + 1
-            nextDepth = depth
+            if successorIndex == gameState.getNumAgents():
+                successorIndex = 0
+                successorDepth += 1
 
-            if nextAgent == state.getNumAgents():
-                nextAgent = 0
-                nextDepth += 1
+            successorValue = self.alphaBeta(successor, successorIndex, successorDepth, alpha, beta)[0]
 
-            value, _ = self.alphabeta(successor, nextAgent, nextDepth, alpha, beta)
-
-            if value < v:
-                v = value
+            if successorValue < v:
+                v = successorValue
                 bestAction = action
 
             if v < alpha:
                 return v, bestAction
 
-            bestAction = min(beta, v)
+            beta = min(beta, v)
 
         return v, bestAction
 
@@ -225,7 +223,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
 
 def betterEvaluationFunction(currentGameState):
     """
