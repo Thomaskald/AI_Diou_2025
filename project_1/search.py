@@ -94,19 +94,20 @@ def depthFirstSearch(problem):
 
     stack = Stack()
     start = problem.getInitialState()
-    stack.push((start, [])) # Add first node on stack(starting point, path to that point which is empty)
+    stack.push((start, []))
     visited = set()
 
     while not stack.isEmpty():
-        current, path = stack.pop() # Take the current positiion and path to that position
+        current, path = stack.pop()
 
-        if current in visited: continue # If we already explored this position, skip it and go to the next
+        if current in visited: continue
 
         visited.add(current)
 
         if problem.isGoalState(current): return path
 
-        for nextState, action, _ in problem.getNextStates(current): # To check all neighbours of the current location
+        # Use "_" because we don't care about that result
+        for nextState, action, _ in problem.getNextStates(current):
             if nextState not in visited:
                 stack.push((nextState, path + [action]))
 
@@ -134,6 +135,7 @@ def breadthFirstSearch(problem):
         visited.add(current)
         if problem.isGoalState(current): return path
 
+        # Use "_" because we don't care about that result
         for nextState, action, _ in problem.getNextStates(current):
             if nextState not in visited:
                 queue.push((nextState, path + [action]))
@@ -152,21 +154,21 @@ def uniformCostSearch(problem):
 
     priorityQueue = PriorityQueue()
     start = problem.getInitialState()
-    priorityQueue.push((start, [], 0), 0) # We add on our queue the location, the steps to reach it and the cost
+    priorityQueue.push((start, [], 0), 0)
     visited = {}
 
     while not priorityQueue.isEmpty():
-        location, path, cost = priorityQueue.pop()
+        current, path, cost = priorityQueue.pop()
 
-        if (location in visited) and (visited[location] <= cost): continue
+        if (current in visited) and (visited[current] <= cost): continue
 
-        visited[location] = cost
+        visited[current] = cost
 
-        if problem.isGoalState(location): return path
+        if problem.isGoalState(current): return path
 
-        for nextState, action, stepCost in problem.getNextStates(location):
+        for nextState, action, stepCost in problem.getNextStates(current):
             totalCost = cost + stepCost
-            if (location not in visited) or (totalCost < visited.get(nextState, float('inf'))):
+            if (current not in visited) or (totalCost < visited.get(nextState, float('inf'))):
                 priorityQueue.push((nextState, path + [action], totalCost), totalCost)
 
     return []
@@ -188,14 +190,13 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     from util import PriorityQueue
 
     start = problem.getInitialState()
-    frontier = PriorityQueue()
-    frontier.push((start, [], 0), heuristic(start, problem))
+    priorityQueue = PriorityQueue()
+    priorityQueue.push((start, [], 0), heuristic(start, problem))
     visited = {}
 
-    while not frontier.isEmpty():
-        current, path, cost = frontier.pop()
+    while not priorityQueue.isEmpty():
+        current, path, cost = priorityQueue.pop()
 
-        # Αν έχουμε επισκεφτεί το current με μικρότερο κόστος, το αγνοούμε
         if current in visited and visited[current] <= cost:
             continue
 
@@ -208,7 +209,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             newCost = cost + stepCost
             priority = newCost + heuristic(nextState, problem)
             if nextState not in visited or newCost < visited.get(nextState, float('inf')):
-                frontier.push((nextState, path + [action], newCost), priority)
+                priorityQueue.push((nextState, path + [action], newCost), priority)
 
     return []
 
