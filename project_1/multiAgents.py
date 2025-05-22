@@ -93,8 +93,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
     def maxValue(self, gameState, currentDepth, agentIndex):
         v = float("-inf")
         bestAction = None
-        allActions = gameState.getAvailableActions(agentIndex)
-        for action in allActions:
+        for action in gameState.getAvailableActions(agentIndex) :
             successor = gameState.generateNextState(agentIndex, action)
             successorIndex = agentIndex + 1
             successorDepth = currentDepth
@@ -114,8 +113,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
     def minValue(self, gameState, currentDepth, agentIndex):
         v = float("inf")
         bestAction = None
-        allActions = gameState.getAvailableActions(agentIndex)
-        for action in allActions:
+        for action in gameState.getAvailableActions(agentIndex):
             successor = gameState.generateNextState(agentIndex, action)
             successorIndex = agentIndex + 1
             successorDepth = currentDepth
@@ -159,8 +157,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     def maxValue(self, gameState, depth, agentIndex, alpha, beta):
         v = float("-inf")
         bestAction = None
-        allActions = gameState.getAvailableActions(agentIndex)
-        for action in allActions:
+        for action in gameState.getAvailableActions(agentIndex):
             successor = gameState.generateNextState(agentIndex, action)
             successorIndex = agentIndex + 1
             successorDepth = depth
@@ -185,8 +182,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     def minValue(self, gameState, depth, agentIndex, alpha, beta):
         v = float("inf")
         bestAction = None
-        allActions = gameState.getAvailableActions(agentIndex)
-        for action in allActions:
+        for action in gameState.getAvailableActions(agentIndex):
             successor = gameState.generateNextState(agentIndex, action)
             successorIndex = agentIndex + 1
             successorDepth = depth
@@ -239,8 +235,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
     def maxValue(self, gameState, depth, agentIndex):
         v = float("-inf")
         bestAction = None
-        allActions = gameState.getAvailableActions(agentIndex)
-        for action in allActions:
+        for action in gameState.getAvailableActions(agentIndex):
             successor = gameState.generateNextState(agentIndex, action)
             successorIndex = agentIndex + 1
             successorDepth = depth
@@ -260,12 +255,11 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
     def expValue(self, gameState, depth, agentIndex):
         v = 0
         bestAction = None
-        allActions = gameState.getAvailableActions(agentIndex)
 
-        if len(allActions) == 0:
+        if len(gameState.getAvailableActions(agentIndex)) == 0:
             return self.evaluationFunction(gameState), None
 
-        for action in allActions:
+        for action in gameState.getAvailableActions(agentIndex):
             successor = gameState.generateNextState(agentIndex, action)
             successorIndex = agentIndex + 1
             successorDepth = depth
