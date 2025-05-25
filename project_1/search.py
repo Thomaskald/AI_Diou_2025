@@ -100,15 +100,13 @@ def depthFirstSearch(problem):
     while not stack.isEmpty():
         current, path = stack.pop()
 
-        if current in visited: continue
+        if problem.isGoalState(current):
+            return path
 
-        visited.add(current)
-
-        if problem.isGoalState(current): return path
-
-        # Use "_" because we don't care about that result
-        for nextState, action, _ in problem.getNextStates(current):
-            if nextState not in visited:
+        if current not in visited:
+            visited.add(current)
+            # Use "_" because we don't care about that result
+            for nextState, action, _ in problem.getNextStates(current):
                 stack.push((nextState, path + [action]))
 
     return []
@@ -130,14 +128,14 @@ def breadthFirstSearch(problem):
 
     while not queue.isEmpty():
         current, path = queue.pop()
-        if current in visited: continue
 
-        visited.add(current)
-        if problem.isGoalState(current): return path
+        if problem.isGoalState(current):
+            return path
 
-        # Use "_" because we don't care about that result
-        for nextState, action, _ in problem.getNextStates(current):
-            if nextState not in visited:
+        if current not in visited:
+            visited.add(current)
+            # Use "_" because we don't care about that result
+            for nextState, action, _ in problem.getNextStates(current):
                 queue.push((nextState, path + [action]))
 
     return []
