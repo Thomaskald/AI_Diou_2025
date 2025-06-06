@@ -1,7 +1,7 @@
 import numpy
 import numpy as np
 
-class LinearProgression:
+class LinearRegression:
     def __init__(self):
 
         self.w = None
