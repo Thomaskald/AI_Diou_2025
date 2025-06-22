@@ -6,43 +6,43 @@ class LinearRegression:
 
         self.w = None
         self.b = None
-        self.N = None
-        self.p = None
 
     def fit(self, X, y):
-        X = np.array(X)
-        y = np.array(y)
+        if not isinstance(X, np.ndarray) or not isinstance(y, np.ndarray):
+            raise ValueError("X and y must be of type np.ndarray")
+        if X.ndim != 2 or y.ndim != 1:
+            raise ValueError("X must have 2 dimensions and y must have 1 dimension")
+        if X.shape[0] != y.shape[0]:
+            raise ValueError("X and y must have same number of rows")
 
-        if len(X) != len(y):
-            raise ValueError("X and y must be compatible")
+        N, p = X.shape
 
-        ones = np.ones((self.N,1))
-        X_new = np.hstack((X, ones))
+        X_aug = np.column_stack((X, np.ones(N)))
 
-        XT_X = X_new.T @ X_new
-        XT_y = X_new.T @ y
-        theta = np.linalg.inv(XT_X) @ XT_y
+        XT_X = np.dot(X_aug.T, X_aug)
+        XT_X_inv = np.linalg.inv(XT_X)
+        XT_y = np.dot(X_aug.T, y)
+        theta = np.dot(XT_X_inv, XT_y)
 
-        self.w = theta[:-1].flatten()
-        self.b = theta[-1][0]
+        self.w = theta[:-1]
+        self.b = theta[-1]
 
     def predict(self, X):
         if self.w is None or self.b is None:
             raise ValueError("The model has not been trained")
+        if not isinstance(X, np.ndarray):
+            raise ValueError("X must be of type np.ndarray")
+        if X.ndim != 2:
+            raise ValueError("X must have 2 dimensions")
 
-        X = np.array(X)
-
-        y_pred = X @ self.w + self.b
-        return y_pred
+        return np.dot(X, self.w) + self.b
 
     def evaluate(self, X, y):
-        if self.w is None or self.b is None:
-            raise ValueError("The model has not been trained")
+        if not isinstance(y, np.ndarray):
+            raise ValueError("y must be of type np.ndarray")
+        if y.ndim != 1:
+            raise ValueError("y must have 1 dimension")
 
         y_pred = self.predict(X)
-
-        mse = (y_pred - y).T @ (y_pred - y) / len(y)
-
-        mse = mse.item()
-
-        return y_pred.flatten(), mse
+        mse = np.mean((y_pred - y) ** 2)
+        return y_pred, mse
