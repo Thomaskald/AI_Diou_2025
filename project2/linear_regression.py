@@ -38,10 +38,13 @@ class LinearRegression:
         return np.dot(X, self.w) + self.b
 
     def evaluate(self, X, y):
-        if not isinstance(y, np.ndarray):
-            raise ValueError("y must be of type np.ndarray")
+        if not isinstance(X, np.ndarray) or not isinstance(y, np.ndarray):
+            raise ValueError("X and y must be of type np.ndarray")
         if y.ndim != 1:
             raise ValueError("y must have 1 dimension")
+        if X.shape[0] != y.shape[0]:
+            raise ValueError("X and y must have same number of rows")
+
 
         y_pred = self.predict(X)
         mse = (1/X.shape[0]) * np.dot((y_pred - y).T, (y_pred - y))
