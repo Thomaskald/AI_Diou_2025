@@ -44,5 +44,5 @@ class LinearRegression:
             raise ValueError("y must have 1 dimension")
 
         y_pred = self.predict(X)
-        mse = np.mean((y_pred - y) ** 2)
+        mse = (1/X.shape[0]) * np.dot((y_pred - y).T, (y_pred - y))
         return y_pred, mse
