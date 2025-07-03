@@ -45,5 +45,5 @@ for i in range(20):
     sk_rmse.append(np.sqrt(sk_mse))
 
 print("\n20 repetitions")
-print(f"Our implementation - Mean RMSE: {np.mean(my_rmse)}, Standard Deviation: {np.std(my_rmse)}")
+print(f"My implementation - Mean RMSE: {np.mean(my_rmse)}, Standard Deviation: {np.std(my_rmse)}")
 print(f"Sickit-learn - Mean RMSE: {np.mean(sk_rmse)}, Standard Deviation: {np.std(sk_rmse)}")
